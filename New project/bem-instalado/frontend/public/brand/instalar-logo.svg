@@ -1,0 +1,24 @@
+<svg width="760" height="210" viewBox="0 0 760 210" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="goldWordmark" x1="18" y1="12" x2="612" y2="190" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#F7E7C6"/>
+      <stop offset="0.52" stop-color="#D9B66D"/>
+      <stop offset="1" stop-color="#B67C2D"/>
+    </linearGradient>
+    <linearGradient id="barGlow" x1="375" y1="56" x2="570" y2="138" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#D9B66D" stop-opacity="0.2"/>
+      <stop offset="1" stop-color="#D9B66D" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+
+  <rect x="355" y="52" width="220" height="90" rx="20" fill="url(#barGlow)"/>
+
+  <text x="12" y="118" fill="#F4E8D3" font-family="Bodoni Moda, Cormorant Garamond, Georgia, serif" font-size="106" font-weight="500" letter-spacing="1.2">Insta</text>
+  <text x="366" y="118" fill="url(#goldWordmark)" font-family="Bodoni Moda, Cormorant Garamond, Georgia, serif" font-size="106" font-weight="650" letter-spacing="1.4">Lar</text>
+
+  <path d="M280 84C300 68 330 67 350 83" stroke="url(#goldWordmark)" stroke-width="2" stroke-linecap="round" opacity="0.86"/>
+  <path d="M428 142C455 160 503 161 538 145C555 137 569 137 582 148" stroke="url(#goldWordmark)" stroke-width="1.8" stroke-linecap="round" opacity="0.86"/>
+
+  <path d="M16 148C170 154 428 154 584 148" stroke="url(#goldWordmark)" stroke-width="1.8" stroke-linecap="round" opacity="0.88"/>
+  <text x="18" y="178" fill="#D9B66D" font-family="Public Sans, Arial, sans-serif" font-size="20" font-weight="700" letter-spacing="5.2">HOME DECOR</text>
+</svg>

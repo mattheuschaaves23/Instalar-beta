@@ -1,0 +1,125 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FMP DevStart | Landing Page</title>
+  <meta name="description" content="Landing page do minicurso FMP DevStart para iniciantes em programacao.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&family=Poppins:wght@500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="page-glow page-glow-a" aria-hidden="true"></div>
+  <div class="page-glow page-glow-b" aria-hidden="true"></div>
+
+  <header class="site-header">
+    <div class="container nav-wrap">
+      <a class="brand" href="#topo">FMP DevStart</a>
+      <nav class="site-nav" aria-label="Navegacao principal">
+        <a href="#beneficios">Beneficios</a>
+        <a href="#conteudo">Conteudo</a>
+        <a href="#inscricao">Inscricao</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="topo">
+    <section class="hero container reveal">
+      <div class="hero-content">
+        <p class="eyebrow">Minicurso de Programacao para Iniciantes</p>
+        <h1>Comece na tecnologia com um plano simples e pratico</h1>
+        <p>
+          A FMP DevStart ajuda voce a dar os primeiros passos em programacao com foco em
+          pratica, portfolio e orientacao para o mercado.
+        </p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="#inscricao">Quero me inscrever</a>
+          <a class="btn btn-secondary" href="#conteudo">Ver conteudo</a>
+        </div>
+      </div>
+      <div class="hero-media">
+        <img
+          src="https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=1100&q=80"
+          alt="Pessoa estudando programacao no notebook"
+          loading="lazy"
+        >
+        <div class="media-tag">Vagas limitadas</div>
+      </div>
+    </section>
+
+    <section id="beneficios" class="benefits container">
+      <div class="section-head reveal">
+        <p class="eyebrow">Por que participar</p>
+        <h2>Beneficios pensados para quem esta comecando</h2>
+      </div>
+
+      <div class="benefit-grid">
+        <article class="card reveal stagger-1">
+          <h3>Base solida</h3>
+          <p>Aprenda logica, HTML, CSS e JavaScript com linguagem simples e exemplos reais.</p>
+        </article>
+        <article class="card reveal stagger-2">
+          <h3>Projetos guiados</h3>
+          <p>Crie paginas e interfaces para montar portfolio mesmo sem experiencia anterior.</p>
+        </article>
+        <article class="card reveal stagger-3">
+          <h3>Suporte inicial</h3>
+          <p>Receba orientacao para organizar estudos e evoluir de forma constante.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="conteudo" class="content container">
+      <div class="section-head reveal">
+        <p class="eyebrow">Conteudo do curso</p>
+        <h2>O que voce vai estudar na pratica</h2>
+      </div>
+
+      <div class="timeline">
+        <article class="timeline-item reveal stagger-1">
+          <span class="step">Modulo 1</span>
+          <h3>Fundamentos Web</h3>
+          <p>Estrutura com HTML semantico e boas praticas de organizacao.</p>
+        </article>
+        <article class="timeline-item reveal stagger-2">
+          <span class="step">Modulo 2</span>
+          <h3>Estilizacao com CSS</h3>
+          <p>Cores, tipografia, espacamento e responsividade para desktop e mobile.</p>
+        </article>
+        <article class="timeline-item reveal stagger-3">
+          <span class="step">Modulo 3</span>
+          <h3>Interacao com JavaScript</h3>
+          <p>Comportamentos simples para tornar interfaces mais dinamicas.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="inscricao" class="cta container reveal">
+      <div class="cta-text">
+        <p class="eyebrow">Inscricao</p>
+        <h2>Garanta sua vaga na proxima turma</h2>
+        <p>Preencha o formulario para receber detalhes de horario, valores e inicio das aulas.</p>
+      </div>
+
+      <form class="signup-form" action="#" method="post">
+        <label for="nome">Nome</label>
+        <input id="nome" name="nome" type="text" placeholder="Seu nome" required>
+
+        <label for="email">Email</label>
+        <input id="email" name="email" type="email" placeholder="voce@email.com" required>
+
+        <button type="submit" class="btn btn-primary">Enviar inscricao</button>
+      </form>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-wrap">
+      <p>FMP DevStart - Landing page academica.</p>
+      <a href="#topo">Voltar ao topo</a>
+    </div>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,32 @@
+<svg width="256" height="256" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="goldMono" x1="34" y1="30" x2="170" y2="174" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#F8E8C8"/>
+      <stop offset="0.52" stop-color="#DBB871"/>
+      <stop offset="1" stop-color="#B5792B"/>
+    </linearGradient>
+    <linearGradient id="panelShade" x1="20" y1="18" x2="180" y2="184" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#17120D"/>
+      <stop offset="1" stop-color="#090807"/>
+    </linearGradient>
+    <radialGradient id="accentGlow" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(148 44) rotate(90) scale(44)">
+      <stop offset="0" stop-color="#D9B66D" stop-opacity="0.36"/>
+      <stop offset="1" stop-color="#D9B66D" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <rect x="12" y="12" width="176" height="176" rx="38" fill="#080706"/>
+  <rect x="12" y="12" width="176" height="176" rx="38" stroke="url(#goldMono)" stroke-width="2.8"/>
+  <rect x="25" y="25" width="150" height="150" rx="28" fill="url(#panelShade)" stroke="url(#goldMono)" stroke-opacity="0.2"/>
+
+  <circle cx="148" cy="44" r="38" fill="url(#accentGlow)"/>
+
+  <path d="M60 72L100 50L140 72" stroke="url(#goldMono)" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M50 154H150" stroke="url(#goldMono)" stroke-width="1.4" stroke-linecap="round" opacity="0.45"/>
+  <path d="M50 46H150" stroke="url(#goldMono)" stroke-width="1.2" stroke-linecap="round" opacity="0.28"/>
+
+  <path d="M72 82H102V90H90V138H102V146H72V138H82V90H72V82Z" fill="url(#goldMono)"/>
+  <path d="M108 82H118V138H142V146H108V82Z" fill="#F8EFD9"/>
+
+  <path d="M72 157C89 165 111 166 129 158" stroke="url(#goldMono)" stroke-width="1.5" stroke-linecap="round" opacity="0.65"/>
+</svg>

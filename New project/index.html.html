@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <title>Para Rayssa Guerra | Amor Eterno</title>
+    <!-- Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0b0015 0%, #1a0a2e 40%, #230c3a 100%);
+            color: #f0eaff;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* ========= SPLASH SCREEN (HUD INICIAL) ========= */
+        .splash-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, #0a0218, #020005);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            transition: opacity 1.2s cubic-bezier(0.2, 0.9, 0.4, 1);
+            opacity: 1;
+            visibility: visible;
+            backdrop-filter: blur(4px);
+            padding: 1rem;
+        }
+
+        .splash-screen.hide {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        /* Container do coração animado */
+        .heart-container {
+            position: relative;
+            width: min(220px, 65vw);
+            height: min(220px, 65vw);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+        }
+
+        /* SVG do coração com animação de cor */
+        .animated-heart-svg {
+            width: 100%;
+            height: 100%;
+            filter: drop-shadow(0 0 12px rgba(0, 0, 0, 0.5));
+            animation: heartPulse 1.2s ease-in-out infinite alternate;
+        }
+
+        .heart-path {
+            fill: #1a0a2e;
+            stroke: #aa66ff;
+            stroke-width: 2;
+            transition: fill 2.5s cubic-bezier(0.2, 0.9, 0.4, 1.2);
+        }
+
+        /* Nome que aparece dentro do coração */
+        .heart-name {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: clamp(1rem, 5vw, 1.7rem);
+            font-weight: 800;
+            text-align: center;
+            white-space: nowrap;
+            letter-spacing: 1px;
+            z-index: 10;
+            background: linear-gradient(135deg, #fff, #e2b0ff);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            opacity: 0;
+            transition: opacity 0.8s ease 0.2s;
+            width: 90%;
+        }
+        /* Para telas muito pequenas, quebra o nome em duas linhas */
+        @media (max-width: 480px) {
+            .heart-name {
+                white-space: normal;
+                font-size: 1.2rem;
+                line-height: 1.2;
+                width: 85%;
+            }
+        }
+        .heart-name.visible {
+            opacity: 1;
+        }
+
+        /* Texto de crédito (HUD) */
+        .credits-text {
+            font-size: clamp(0.75rem, 4vw, 1rem);
+            font-weight: 500;
+            letter-spacing: 1px;
+            color: #bc9eff;
+            background: rgba(25, 10, 45, 0.6);
+            backdrop-filter: blur(8px);
+            padding: 0.6rem 1.2rem;
+            border-radius: 60px;
+            border: 1px solid rgba(156, 100, 255, 0.5);
+            margin-top: 1rem;
+            opacity: 0;
+            transform: translateY(10px);
+            animation: fadeUpCredits 0.8s forwards 1s;
+            text-align: center;
+            max-width: 90%;
+        }
+
+        @keyframes fadeUpCredits {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes heartPulse {
+            0% { transform: scale(0.98); }
+            100% { transform: scale(1.05); }
+        }
+
+        /* Partículas do splash */
+        .splash-particles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .splash-particle {
+            position: absolute;
+            background: radial-gradient(circle, #b77dff, #6a2ec3);
+            border-radius: 50%;
+            opacity: 0;
+            animation: particleRise 3s ease-out forwards;
+        }
+
+        @keyframes particleRise {
+            0% {
+                transform: translateY(100vh) scale(0);
+                opacity: 0;
+            }
+            20% {
+                opacity: 0.6;
+            }
+            80% {
+                opacity: 0.6;
+            }
+            100% {
+                transform: translateY(-20vh) scale(0.8);
+                opacity: 0;
+            }
+        }
+
+        /* ========= MAIN CONTENT (site principal) ========= */
+        .main-wrapper {
+            position: relative;
+            z-index: 10;
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 1.5rem 1rem 3rem;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 1.2s cubic-bezier(0.2, 0.9, 0.4, 1.1), transform 1s ease;
+        }
+
+        .main-wrapper.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Floating particles elegantes (background) */
+        .particles-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .particle-bg {
+            position: absolute;
+            background: rgba(170, 100, 255, 0.2);
+            border-radius: 50%;
+            filter: blur(3px);
+            animation: floatParticle linear infinite;
+        }
+        @keyframes floatParticle {
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            20% { opacity: 0.5; }
+            80% { opacity: 0.5; }
+            100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
+        }
+
+        /* Hello Kitty flutuante - ajuste mobile */
+        .hello-kitty {
+            position: fixed;
+            bottom: 15px;
+            right: 15px;
+            width: 55px;
+            height: 55px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(8px);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 99;
+            transition: all 0.3s ease;
+            animation: kittyFloat 4s ease-in-out infinite;
+            box-shadow: 0 0 10px rgba(200, 120, 255, 0.3);
+            border: 1px solid rgba(255, 200, 255, 0.3);
+        }
+        .hello-kitty svg {
+            width: 42px;
+            height: 42px;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+        }
+        @media (min-width: 768px) {
+            .hello-kitty {
+                width: 70px;
+                height: 70px;
+                bottom: 25px;
+                right: 25px;
+            }
+            .hello-kitty svg {
+                width: 55px;
+                height: 55px;
+            }
+        }
+        @keyframes kittyFloat {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-8px); }
+            100% { transform: translateY(0px); }
+        }
+
+        /* Header premium */
+        .hero {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .hero h1 {
+            font-size: clamp(1.8rem, 7vw, 3.2rem);
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            background: linear-gradient(125deg, #ffffff, #e6c9ff, #c084fc);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            text-shadow: 0 2px 12px rgba(192, 132, 252, 0.3);
+            padding: 0 0.5rem;
+        }
+        .hero .sub {
+            font-size: clamp(0.8rem, 3.5vw, 1rem);
+            font-weight: 400;
+            color: #cdbbf0;
+            margin-top: 0.5rem;
+            display: inline-block;
+            padding-bottom: 0.3rem;
+            padding: 0 1rem;
+        }
+        .hero-decoration {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+        .hero-decoration span {
+            background: rgba(128, 90, 210, 0.25);
+            backdrop-filter: blur(5px);
+            padding: 0.3rem 0.9rem;
+            border-radius: 40px;
+            font-size: 0.7rem;
+            font-weight: 500;
+            border: 0.5px solid rgba(180, 130, 255, 0.5);
+            white-space: nowrap;
+        }
+        @media (min-width: 480px) {
+            .hero-decoration span {
+                padding: 0.4rem 1.2rem;
+                font-size: 0.8rem;
+            }
+        }
+
+        /* Tabs - ajuste mobile para toque */
+        .tabs-nav {
+            display: flex;
+            justify-content: center;
+            gap: 0.6rem;
+            margin: 2rem 0 1.5rem;
+            flex-wrap: wrap;
+        }
+        .tab-btn {
+            background: rgba(20, 10, 40, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(157, 78, 221, 0.5);
+            padding: 0.6rem 1.2rem;
+            font-weight: 600;
+            font-size: clamp(0.75rem, 3vw, 1rem);
+            border-radius: 60px;
+            color: #e6daff;
+            transition: all 0.2s;
+            font-family: 'Inter', sans-serif;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            min-height: 44px; /* melhor toque */
+        }
+        .tab-btn i {
+            font-size: 0.9rem;
+        }
+        .tab-btn:hover {
+            background: #8b5cf6cc;
+            transform: translateY(-2px);
+        }
+        .tab-btn.active {
+            background: linear-gradient(115deg, #9b4dff, #6c2bd9);
+            border-color: #d9b0ff;
+            box-shadow: 0 4px 12px rgba(108, 43, 217, 0.4);
+        }
+        @media (min-width: 480px) {
+            .tab-btn {
+                padding: 0.8rem 2rem;
+                font-size: 1rem;
+                gap: 8px;
+            }
+        }
+
+        /* Painéis */
+        .tab-pane {
+            display: none;
+            animation: fadeUp 0.4s ease;
+        }
+        .tab-pane.active-pane {
+            display: block;
+        }
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.2rem;
+            margin: 1rem 0;
+        }
+        @media (min-width: 600px) {
+            .cards-grid {
+                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+                gap: 1.5rem;
+            }
+        }
+        .card {
+            background: rgba(20, 12, 38, 0.6);
+            backdrop-filter: blur(10px);
+            border-radius: 1.8rem;
+            padding: 1.2rem;
+            border: 1px solid rgba(156, 100, 255, 0.3);
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 20px -8px rgba(0, 0, 0, 0.3);
+        }
+        .card:active {
+            transform: scale(0.98);
+        }
+        .card-icon {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+            color: #d6acff;
+            display: inline-block;
+        }
+        .card h3 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        .card p {
+            font-size: 0.85rem;
+            line-height: 1.4;
+            color: #e2d4ff;
+        }
+        @media (min-width: 480px) {
+            .card {
+                padding: 1.5rem;
+            }
+            .card h3 {
+                font-size: 1.4rem;
+            }
+            .card p {
+                font-size: 0.9rem;
+            }
+        }
+
+        .quote-mini {
+            text-align: center;
+            margin: 1.5rem auto;
+            font-style: italic;
+            background: rgba(108, 43, 217, 0.2);
+            backdrop-filter: blur(4px);
+            width: fit-content;
+            padding: 0.5rem 1rem;
+            border-radius: 60px;
+            font-size: 0.8rem;
+            border-left: 3px solid #bf8aff;
+            max-width: 95%;
+        }
+        .footer-love {
+            margin-top: 2.5rem;
+            text-align: center;
+            font-size: 0.75rem;
+            padding: 1rem 0.5rem;
+            border-top: 1px solid rgba(156, 100, 255, 0.3);
+            color: #baa7e6;
+        }
+
+        /* Ajustes gerais de espaçamento */
+        @media (max-width: 480px) {
+            .main-wrapper {
+                padding: 1rem 0.8rem 2rem;
+            }
+            .hero {
+                margin-bottom: 1rem;
+            }
+            .tabs-nav {
+                margin: 1.5rem 0 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- SPLASH SCREEN (HUD INICIAL) com duração de ~20 segundos -->
+<div id="splashScreen" class="splash-screen">
+    <div class="splash-particles" id="splashParticles"></div>
+    <div class="heart-container">
+        <svg class="animated-heart-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <path class="heart-path" id="heartPath" d="M50,90 L15,55 C5,45 5,30 15,20 C25,10 35,10 50,25 C65,10 75,10 85,20 C95,30 95,45 85,55 L50,90Z" stroke="url(#gradStroke)" stroke-width="2.5" fill="#1a0a2e"/>
+            <defs>
+                <linearGradient id="gradStroke" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stop-color="#b77dff"/>
+                    <stop offset="100%" stop-color="#e6b3ff"/>
+                </linearGradient>
+            </defs>
+        </svg>
+        <div id="heartName" class="heart-name">Rayssa Guerra</div>
+    </div>
+    <div class="credits-text">✨ Feito por Matheus Chaves para Rayssa Guerra ✨</div>
+</div>
+
+<!-- Partículas de fundo do site principal -->
+<div class="particles-bg" id="particlesBg"></div>
+
+<!-- Hello Kitty -->
+<div class="hello-kitty">
+    <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="50" cy="55" r="38" fill="#FFE6F0" stroke="#FF99BB" stroke-width="1.5"/>
+        <circle cx="32" cy="48" r="4.5" fill="#4A2E2E"/>
+        <circle cx="68" cy="48" r="4.5" fill="#4A2E2E"/>
+        <path d="M38 70 Q50 80 62 70" stroke="#AA6F9E" stroke-width="2" fill="none" stroke-linecap="round"/>
+        <path d="M50 32 L54 40 L50 38 L46 40 L50 32Z" fill="#FFB347"/>
+        <rect x="44" y="58" width="12" height="6" rx="3" fill="#FF99BB"/>
+        <path d="M23 50 L14 44 L18 53 L14 62 L23 56 Z" fill="#FFB6C1" opacity="0.8"/>
+        <path d="M77 50 L86 44 L82 53 L86 62 L77 56 Z" fill="#FFB6C1" opacity="0.8"/>
+        <circle cx="50" cy="53" r="3" fill="#FF88AA"/>
+    </svg>
+</div>
+
+<!-- CONTEÚDO PRINCIPAL -->
+<div class="main-wrapper" id="mainWrapper">
+    <div class="hero">
+        <h1>meu amor, você é minha constante</h1>
+        <div class="hero-decoration">
+            <span><i class="fas fa-moon"></i> eternidade</span>
+            <span><i class="fas fa-gem"></i> sintonia</span>
+            <span><i class="fas fa-infinity"></i> além do tempo</span>
+        </div>
+        <div class="sub">— cada versão minha sempre te amará, Rayssa —</div>
+    </div>
+
+    <div class="tabs-nav">
+        <button class="tab-btn active" data-tab="tabReasons"><i class="fas fa-heart"></i> Por que amo</button>
+        <button class="tab-btn" data-tab="tabForever"><i class="fas fa-infinity"></i> Sempre vou amar</button>
+        <button class="tab-btn" data-tab="tabDreams"><i class="fas fa-cloud-moon"></i> Sonhos</button>
+    </div>
+
+    <!-- Tab 1 -->
+    <div class="tab-pane active-pane" id="tabReasons">
+        <div class="cards-grid">
+            <div class="card"><div class="card-icon"><i class="fas fa-sun"></i></div><h3>luz que me guia</h3><p>Sua existência ilumina meus dias mais escuros, traz clareza e esperança.</p></div>
+            <div class="card"><div class="card-icon"><i class="fas fa-hand-holding-heart"></i></div><h3>generosidade sem fim</h3><p>Você se doa inteira, cuida de mim com um carinho que transborda.</p></div>
+            <div class="card"><div class="card-icon"><i class="fas fa-comment-dots"></i></div><h3>diálogo perfeito</h3><p>Falamos com os olhos, rimos das mesmas bobagens, nos entendemos em silêncio.</p></div>
+            <div class="card"><div class="card-icon"><i class="fas fa-crown"></i></div><h3>força e doçura</h3><p>Você é forte sem perder a ternura, admirável em cada atitude.</p></div>
+        </div>
+        <div class="quote-mini"><i class="fas fa-quote-left"></i> Te amo pela pessoa que é e pela pessoa que me inspira a ser.</div>
+    </div>
+
+    <!-- Tab 2 -->
+    <div class="tab-pane" id="tabForever">
+        <div class="cards-grid">
+            <div class="card"><div class="card-icon"><i class="fas fa-chart-line"></i></div><h3>crescimento infinito</h3><p>Nosso amor não estagna, a cada dia floresce mais forte e maduro.</p></div>
+            <div class="card"><div class="card-icon"><i class="fas fa-tree"></i></div><h3>raízes profundas</h3><p>Construímos uma base sólida, o tempo só a torna mais inabalável.</p></div>
+            <div class="card"><div class="card-icon"><i class="fas fa-ring"></i></div><h3>compromisso genuíno</h3><p>Meu coração escolheu você para todas as estações da vida.</p></div>
+            <div class="card"><div class="card-icon"><i class="fas fa-hourglass-half"></i></div><h3>eternidade presente</h3><p>Cada segundo ao seu lado já é uma promessa de sempre.</p></div>
+        </div>
+        <div class="quote-mini"><i class="fas fa-feather"></i> Não é sobre “até que a vida nos separe”, é sobre “além de qualquer tempo”.</div>
+    </div>
+
+    <!-- Tab 3 -->
+    <div class="tab-pane" id="tabDreams">
+        <div class="cards-grid">
+            <div class="card"><div class="card-icon"><i class="fas fa-map-marked-alt"></i></div><h3>viajar o mundo</h3><p>Cada destino será especial porque estará ao meu lado.</p></div>
+            <div class="card"><div class="card-icon"><i class="fas fa-home"></i></div><h3>nosso lar dos sonhos</h3><p>Um espaço repleto de livros, plantas, risos e muitos gatinhos (e Hello Kittys).</p></div>
+            <div class="card"><div class="card-icon"><i class="fas fa-dove"></i></div><h3>envelhecer juntos</h3><p>Cabelos brancos e ainda trocando olhares cúmplices.</p></div>
+            <div class="card"><div class="card-icon"><i class="fas fa-meteor"></i></div><h3>construir legado</h3><p>Viver uma história que inspire, cheia de amor e arte.</p></div>
+        </div>
+        <div class="quote-mini"><i class="fas fa-heartbeat"></i> Meu futuro só faz sentido com você nele. Te amarei hoje, amanhã e sempre.</div>
+    </div>
+
+    <div class="footer-love">
+        <i class="fas fa-heart" style="color:#cb9eff;"></i>  eu, você e toda a eternidade  <i class="fas fa-heart" style="color:#cb9eff;"></i>
+    </div>
+</div>
+
+<script>
+    // ========= SPLASH COM DURAÇÃO ESTENDIDA (~20 segundos) =========
+    const splash = document.getElementById('splashScreen');
+    const heartPath = document.getElementById('heartPath');
+    const heartNameDiv = document.getElementById('heartName');
+    const mainWrapper = document.getElementById('mainWrapper');
+
+    // Partículas do splash (recriação a cada 5s para manter movimento)
+    function createSplashParticles() {
+        const container = document.getElementById('splashParticles');
+        if (!container) return;
+        container.innerHTML = '';
+        const count = 100; // partículas suficientes para mobile
+        for (let i = 0; i < count; i++) {
+            const particle = document.createElement('div');
+            particle.classList.add('splash-particle');
+            const size = Math.random() * 6 + 2;
+            particle.style.width = size + 'px';
+            particle.style.height = size + 'px';
+            particle.style.left = Math.random() * 100 + '%';
+            const duration = Math.random() * 4 + 2.5;
+            particle.style.animationDuration = duration + 's';
+            particle.style.animationDelay = Math.random() * 3 + 's';
+            particle.style.background = `radial-gradient(circle, #b77dff, #4a1d9d)`;
+            container.appendChild(particle);
+        }
+    }
+    createSplashParticles();
+    const particleInterval = setInterval(() => {
+        if (splash && !splash.classList.contains('hide')) {
+            createSplashParticles();
+        } else {
+            clearInterval(particleInterval);
+        }
+    }, 5000);
+
+    // Animações com timings estendidos:
+    // 1) Após 1.5s, inicia a transição do coração para roxo (duração 2.5s)
+    setTimeout(() => {
+        if (heartPath) {
+            heartPath.setAttribute('fill', '#b77dff');
+            const svgHeart = document.querySelector('.animated-heart-svg');
+            if (svgHeart) svgHeart.style.filter = 'drop-shadow(0 0 20px #c084fc)';
+        }
+    }, 1500);
+
+    // 2) Após 4 segundos (quando o coração já está roxo), revela o nome
+    setTimeout(() => {
+        heartNameDiv.classList.add('visible');
+        canvasConfetti({ particleCount: 80, spread: 55, origin: { y: 0.6 }, colors: ['#b77dff', '#e6b3ff'], startVelocity: 12 });
+    }, 4000);
+
+    // 3) Após 20 segundos totais, esconde o splash e revela o site
+    setTimeout(() => {
+        if (splash) {
+            splash.classList.add('hide');
+            clearInterval(particleInterval);
+            mainWrapper.classList.add('visible');
+            // Confetes finais
+            canvasConfetti({ particleCount: 200, spread: 80, origin: { y: 0.5 }, colors: ['#b77dff', '#ffffff', '#d9a7ff'], startVelocity: 16 });
+            canvasConfetti({ particleCount: 80, spread: 100, origin: { y: 0.3, x: 0.2 }, colors: ['#c184ff'] });
+            canvasConfetti({ particleCount: 80, spread: 100, origin: { y: 0.3, x: 0.8 }, colors: ['#a05eff'] });
+            
+            // Mensagem de boas-vindas
+            const toast = document.createElement('div');
+            toast.innerText = '🌸 Bem-vinda, Rayssa! Este universo é todo seu 🌸';
+            toast.style.position = 'fixed';
+            toast.style.bottom = '20px';
+            toast.style.left = '50%';
+            toast.style.transform = 'translateX(-50%)';
+            toast.style.backgroundColor = 'rgba(90, 40, 150, 0.9)';
+            toast.style.backdropFilter = 'blur(12px)';
+            toast.style.padding = '10px 18px';
+            toast.style.borderRadius = '50px';
+            toast.style.fontWeight = '500';
+            toast.style.fontSize = '0.8rem';
+            toast.style.zIndex = '999';
+            toast.style.color = '#f2e6ff';
+            toast.style.border = '1px solid #c28eff';
+            toast.style.pointerEvents = 'none';
+            toast.style.whiteSpace = 'nowrap';
+            document.body.appendChild(toast);
+            setTimeout(() => { toast.style.opacity = '0'; setTimeout(() => toast.remove(), 1500); }, 3000);
+        }
+    }, 20000); // 20 segundos
+
+    // ========= PARTÍCULAS DE FUNDO DO SITE PRINCIPAL =========
+    function createBgParticles() {
+        const container = document.getElementById('particlesBg');
+        if (!container) return;
+        const count = 60;
+        for (let i = 0; i < count; i++) {
+            const particle = document.createElement('div');
+            particle.classList.add('particle-bg');
+            const size = Math.random() * 6 + 2;
+            particle.style.width = size + 'px';
+            particle.style.height = size + 'px';
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.animationDuration = Math.random() * 15 + 8 + 's';
+            particle.style.animationDelay = Math.random() * 12 + 's';
+            particle.style.opacity = Math.random() * 0.4 + 0.1;
+            particle.style.background = `radial-gradient(circle, rgba(180, 110, 255, 0.5), rgba(100, 50, 180, 0.2))`;
+            container.appendChild(particle);
+        }
+    }
+    createBgParticles();
+
+    // ========= LÓGICA DAS ABAS =========
+    const tabBtns = document.querySelectorAll('.tab-btn');
+    const panes = document.querySelectorAll('.tab-pane');
+    function switchTab(tabId) {
+        panes.forEach(pane => pane.classList.remove('active-pane'));
+        const activePane = document.getElementById(tabId);
+        if (activePane) activePane.classList.add('active-pane');
+        tabBtns.forEach(btn => {
+            btn.classList.remove('active');
+            if (btn.getAttribute('data-tab') === tabId) btn.classList.add('active');
+        });
+    }
+    tabBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const tabId = btn.getAttribute('data-tab');
+            switchTab(tabId);
+            // Pequenos efeitos visuais nas abas (apenas para feedback)
+            for (let i = 0; i < 6; i++) {
+                let spark = document.createElement('div');
+                spark.innerHTML = '✨';
+                spark.style.position = 'fixed';
+                spark.style.left = (btn.getBoundingClientRect().left + btn.clientWidth / 2) + 'px';
+                spark.style.top = (btn.getBoundingClientRect().top + btn.clientHeight / 2) + 'px';
+                spark.style.fontSize = '12px';
+                spark.style.pointerEvents = 'none';
+                spark.style.zIndex = '9999';
+                spark.style.transition = 'all 0.5s ease-out';
+                spark.style.opacity = '0.8';
+                document.body.appendChild(spark);
+                let moveX = (Math.random() - 0.5) * 50;
+                let moveY = (Math.random() - 0.5) * 40 - 15;
+                setTimeout(() => {
+                    spark.style.transform = `translate(${moveX}px, ${moveY}px) scale(0.4)`;
+                    spark.style.opacity = '0';
+                }, 10);
+                setTimeout(() => spark.remove(), 600);
+            }
+        });
+    });
+</script>
+</body>
+</html>
